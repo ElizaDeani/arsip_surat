@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Arsip Surat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #222;
+            color: white;
+            position: fixed;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            color: white;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            background: #007bff;
+        }
+        .header-bar {
+            background: linear-gradient(90deg, #007bff, #00c6ff);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: calc(100% - 250px);
+            left: 250px;
+            top: 0;
+            z-index: 1000;
+        }
+        .header-bar .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .header-bar .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        .chart-container {
+            width: 50%;
+            height: 300px;
+        }
+        .table-container {
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h4 class="text-center">Archivio</h4>
+        <a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="surat_masuk.html"><i class="fas fa-inbox"></i> Surat Masuk</a>
+        <a href="surat_keluar.html"><i class="fas fa-paper-plane"></i> Surat Keluar</a>
+        <a href="account.html"><i class="fas fa-user"></i> Account</a>
+        <a href="pengaturan.html"><i class="fas fa-cog"></i> Settings</a>
+        <a href="#"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+    </div>
+    <div class="header-bar">
+        <h4>Welcome back, Olivia Wilson</h4>
+        <div class="user-info">
+            <span>Admin</span>
+            <img src="https://via.placeholder.com/40" alt="User Profile">
+        </div>
+    </div>
+    <div class="content">
+        <h2>Welcome back, Olivia Wilson</h2>
+        <p>Let’s take a detailed look at your financial situation today</p>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Surat Masuk</h5>
+                        <h3>5</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Surat Keluar</h5>
+                        <h3>5</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Arsip</h5>
+                        <h3>10</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 chart-container">
+                <div class="card mb-3">
+                    <div class="card-header">Grafik Surat Masuk & Keluar</div>
+                    <div class="card-body">
+                        <canvas id="arsipChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 table-container">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>Semua Surat</h5>
+                        <div>
+                            <button class="btn btn-primary"><i class="fas fa-print"></i> Print</button>
+                            <button class="btn btn-secondary"><i class="fas fa-share"></i> Share</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Kode Surat</th>
+                                    <th>Tanggal</th>
+                                    <th>Perihal</th>
+                                    <th>Keterangan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>A/24/jabsjsg</td>
+                                    <td>Today</td>
+                                    <td>Surat undangan</td>
+                                    <td><a href="#">Surat Masuk</a></td>
+                                </tr>
+                                <tr>
+                                    <td>B/0283/ksshdj</td>
+                                    <td>Today</td>
+                                    <td>Surat undangan</td>
+                                    <td><a href="#">Surat Keluar</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var ctx = document.getElementById('arsipChart').getContext('2d');
+        var arsipChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Januari', 'Februari', 'Maret'],
+                datasets: [
+                    {
+                        label: 'Surat Masuk',
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        data: [5, 10, 15]
+                    },
+                    {
+                        label: 'Surat Keluar',
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        data: [4, 8, 12]
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

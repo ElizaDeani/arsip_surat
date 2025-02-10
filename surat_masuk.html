@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Surat Masuk</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-4">
+    <h3>📩 Surat Masuk</h3>
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalSurat" onclick="resetForm()">
+        ➕ Tambah Surat
+    </button>
+
+    <!-- Filter & Sorting -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label>Kategori Surat:</label>
+            <select id="filterKategori" class="form-control" onchange="filterSurat()">
+                <option value="">Semua</option>
+                <option value="Undangan">Undangan</option>
+                <option value="Pemberitahuan">Pemberitahuan</option>
+                <option value="Laporan">Laporan</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label>Urutkan:</label>
+            <select id="sortSurat" class="form-control" onchange="sortSurat()">
+                <option value="desc">Tanggal Terbaru</option>
+                <option value="asc">Tanggal Terlama</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Judul</th>
+                    <th>Kategori</th>
+                    <th>Lampiran</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="suratMasukTable"></tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Tambah/Edit Surat -->
+<div class="modal fade" id="modalSurat">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tambah/Edit Surat Masuk</h5>
+            </div>
+            <div class="modal-body">
+                <form id="formSurat">
+                    <input type="hidden" id="editIndex">
+                    <div class="mb-3">
+                        <label>Tanggal</label>
+                        <input type="date" class="form-control" id="tanggal" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Judul Surat</label>
+                        <input type="text" class="form-control" id="judul" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Kategori Surat</label>
+                        <select id="kategori" class="form-control">
+                            <option value="Undangan">Undangan</option>
+                            <option value="Pemberitahuan">Pemberitahuan</option>
+                            <option value="Laporan">Laporan</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label>Upload Lampiran (PDF/Gambar)</label>
+                        <input type="file" class="form-control" id="lampiran" accept=".pdf, .jpg, .png">
+                    </div>
+                    <button type="submit" class="btn btn-success">Simpan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let suratData = [];
+
+    function renderTable() {
+        let table = document.getElementById('suratMasukTable');
+        table.innerHTML = "";
+        suratData.forEach((surat, index) => {
+            let row = table.insertRow();
+            row.innerHTML = `<td>${surat.tanggal}</td>
+                <td>${surat.judul}</td>
+                <td>${surat.kategori}</td>
+                <td>
+                    ${surat.fileURL ? `<a href="${surat.fileURL}" target="_blank" class="btn btn-info btn-sm">📄 View</a>
+                    <a href="${surat.fileURL}" download class="btn btn-secondary btn-sm">⬇️ Download</a>` : ""}
+                </td>
+                <td>
+                    <button class="btn btn-warning btn-sm" onclick="editSurat(${index})">✏️ Edit</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteSurat(${index})">🗑 Hapus</button>
+                </td>`;
+        });
+    }
+
+    document.getElementById('formSurat').addEventListener('submit', function(event) {
+        event.preventDefault();
+        let index = document.getElementById('editIndex').value;
+        let tanggal = document.getElementById('tanggal').value;
+        let judul = document.getElementById('judul').value;
+        let kategori = document.getElementById('kategori').value;
+        let fileInput = document.getElementById('lampiran');
+        let file = fileInput.files[0];
+
+        let fileURL = file ? URL.createObjectURL(file) : suratData[index]?.fileURL || "";
+        let fileName = file ? file.name : suratData[index]?.fileName || "";
+
+        let newSurat = { tanggal, judul, kategori, fileURL, fileName };
+
+        if (index) {
+            suratData[index] = newSurat;
+        } else {
+            suratData.push(newSurat);
+        }
+
+        renderTable();
+        document.getElementById('formSurat').reset();
+        let modal = bootstrap.Modal.getInstance(document.getElementById('modalSurat'));
+        modal.hide();
+    });
+
+    function deleteSurat(index) {
+        if (confirm("Apakah Anda yakin ingin menghapus surat ini?")) {
+            suratData.splice(index, 1);
+            renderTable();
+        }
+    }
+
+    function editSurat(index) {
+        let surat = suratData[index];
+        document.getElementById('editIndex').value = index;
+        document.getElementById('tanggal').value = surat.tanggal;
+        document.getElementById('judul').value = surat.judul;
+        document.getElementById('kategori').value = surat.kategori;
+        let modal = new bootstrap.Modal(document.getElementById('modalSurat'));
+        modal.show();
+    }
+
+    function filterSurat() {
+        let kategori = document.getElementById('filterKategori').value;
+        let filteredData = suratData.filter(surat => !kategori || surat.kategori === kategori);
+        renderTable(filteredData);
+    }
+
+    function sortSurat() {
+        let order = document.getElementById('sortSurat').value;
+        suratData.sort((a, b) => order === "asc" ? a.tanggal.localeCompare(b.tanggal) : b.tanggal.localeCompare(a.tanggal));
+        renderTable();
+    }
+
+    function resetForm() {
+        document.getElementById('editIndex').value = "";
+        document.getElementById('formSurat').reset();
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
