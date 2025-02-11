@@ -232,6 +232,29 @@ body {
                     </td>`;
             });
         }
+        function editSurat(index) {
+            let surat = suratData[index];
+
+            document.getElementById('editIndex').value = index;
+            document.getElementById('noSurat').value = surat.noSurat;
+            document.getElementById('kodeSurat').value = surat.kodeSurat;
+            document.getElementById('waktuMasuk').value = surat.waktuMasuk;
+            document.getElementById('nomorSurat').value = surat.nomorSurat;
+            document.getElementById('tanggalsurat').value = surat.tanggalSurat;
+            document.getElementById('perihal').value = surat.perihal;
+            document.getElementById('pengirim').value = surat.pengirim;
+            document.getElementById('kepada').value = surat.kepada;
+
+            let modal = new bootstrap.Modal(document.getElementById('modalSurat'));
+            modal.show();
+        }
+
+        function deleteSurat(index) {
+            if (confirm("Apakah Anda yakin ingin menghapus surat ini?")) {
+                suratData.splice(index, 1);
+                renderTable();
+            }
+        }
 
         document.getElementById('formSurat').addEventListener('submit', function(event) {
     event.preventDefault();
