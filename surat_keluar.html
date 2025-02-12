@@ -126,7 +126,7 @@ body {
                     <th>Aksi</th>
                 </tr>
             </thead>
-            <tbody id="suratMasukTable"></tbody>
+            <tbody id="suratKeluarTable"></tbody>
         </table>
     </div>
 </div>
@@ -136,26 +136,43 @@ body {
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Tambah/Edit Surat Masuk</h5>
+                <h5 class="modal-title">Tambah/Edit Surat Keluar</h5>
             </div>
             <div class="modal-body">
                 <form id="formSurat">
                     <input type="hidden" id="editIndex">
+                    
                     <div class="mb-3">
-                        <label>Tanggal</label>
-                        <input type="date" class="form-control" id="tanggal" required>
+                        <label>No</label>
+                        <input type="number" class="form-control" id="noSurat" required>
                     </div>
                     <div class="mb-3">
-                        <label>Judul Surat</label>
-                        <input type="text" class="form-control" id="judul" required>
+                        <label>Kode Surat</label>
+                        <input type="text" class="form-control" id="kodeSurat" required>
                     </div>
                     <div class="mb-3">
-                        <label>Kategori Surat</label>
-                        <select id="kategori" class="form-control">
-                            <option value="Undangan">Undangan</option>
-                            <option value="Pemberitahuan">Pemberitahuan</option>
-                            <option value="Laporan">Laporan</option>
-                        </select>
+                        <label>Waktu Keluar</label>
+                        <input type="datetime-local" class="form-control" id="waktuKeluar" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Nomor Surat</label>
+                        <input type="text" class="form-control" id="nomorSurat" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Tanggal Surat</label>
+                        <input type="date" class="form-control" id="tanggalsurat" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Perihal</label>
+                        <input type="text" class="form-control" id="perihal" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Pengirim</label>
+                        <input type="text" class="form-control" id="pengirim" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Kepada</label>
+                        <input type="text" class="form-control" id="kepada" required>
                     </div>
                     <div class="mb-3">
                         <label>Upload Lampiran (PDF/Gambar)</label>
@@ -169,52 +186,65 @@ body {
 </div>
 
 <script>
-    let suratData = [];
+ document.addEventListener("DOMContentLoaded", function () {
+        let inputWaktu = document.getElementById("waktuKeluar");
+
+        // Set nilai default ke waktu sekarang dalam format yang benar
+        let now = new Date();
+        let formattedNow = now.toISOString().slice(0, 16); // yyyy-MM-ddTHH:mm
+        inputWaktu.value = formattedNow;
+
+        // Pastikan input tetap sesuai format saat pengguna mengetik
+        inputWaktu.addEventListener("blur", function () {
+            let value = inputWaktu.value;
+            if (!value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)) {
+                alert("Format tanggal dan waktu harus: YYYY-MM-DDTHH:MM");
+                inputWaktu.value = formattedNow; // Kembalikan ke nilai default jika salah
+            }
+        });
+    });
+let suratData = [];
 
     function renderTable() {
-        let table = document.getElementById('suratMasukTable');
+        let table = document.getElementById('suratKeluarTable');
         table.innerHTML = "";
         suratData.forEach((surat, index) => {
             let row = table.insertRow();
-            row.innerHTML = `<td>${surat.tanggal}</td>
-                <td>${surat.judul}</td>
-                <td>${surat.kategori}</td>
-                <td>
-                    ${surat.fileURL ? `<a href="${surat.fileURL}" target="_blank" class="btn btn-info btn-sm">📄 View</a>
-                    <a href="${surat.fileURL}" download class="btn btn-secondary btn-sm">⬇️ Download</a>` : ""}
-                </td>
+            row.innerHTML = `<td>${surat.noSurat}</td>
+                <td>${surat.kodeSurat}</td>
+                <td>${surat.waktuKeluar}</td>
+                <td>${surat.nomorSurat}</td>
+                <td>${surat.tanggalSurat}</td>
+                <td>${surat.perihal}</td>
+                <td>${surat.pengirim}</td>
+                <td>${surat.kepada}</td>
+                
+                <td>${surat.fileURL ? 
+    `<a href="${surat.fileURL}" target="_blank" class="btn btn-info btn-sm">📄 View</a>
+    <a href="${surat.fileURL}" download class="btn btn-success btn-sm">⬇️ Download</a>` 
+    : ""}</td>
                 <td>
                     <button class="btn btn-warning btn-sm" onclick="editSurat(${index})">✏️ Edit</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteSurat(${index})">🗑 Hapus</button>
                 </td>`;
         });
     }
+    function editSurat(index) {
+        let surat = suratData[index];
 
-    document.getElementById('formSurat').addEventListener('submit', function(event) {
-        event.preventDefault();
-        let index = document.getElementById('editIndex').value;
-        let tanggal = document.getElementById('tanggal').value;
-        let judul = document.getElementById('judul').value;
-        let kategori = document.getElementById('kategori').value;
-        let fileInput = document.getElementById('lampiran');
-        let file = fileInput.files[0];
+        document.getElementById('editIndex').value = index;
+        document.getElementById('noSurat').value = surat.noSurat;
+        document.getElementById('kodeSurat').value = surat.kodeSurat;
+        document.getElementById('waktuKeluar').value = surat.waktuKleuar;
+        document.getElementById('nomorSurat').value = surat.nomorSurat;
+        document.getElementById('tanggalsurat').value = surat.tanggalSurat;
+        document.getElementById('perihal').value = surat.perihal;
+        document.getElementById('pengirim').value = surat.pengirim;
+        document.getElementById('kepada').value = surat.kepada;
 
-        let fileURL = file ? URL.createObjectURL(file) : suratData[index]?.fileURL || "";
-        let fileName = file ? file.name : suratData[index]?.fileName || "";
-
-        let newSurat = { tanggal, judul, kategori, fileURL, fileName };
-
-        if (index) {
-            suratData[index] = newSurat;
-        } else {
-            suratData.push(newSurat);
-        }
-
-        renderTable();
-        document.getElementById('formSurat').reset();
-        let modal = bootstrap.Modal.getInstance(document.getElementById('modalSurat'));
-        modal.hide();
-    });
+        let modal = new bootstrap.Modal(document.getElementById('modalSurat'));
+        modal.show();
+    }
 
     function deleteSurat(index) {
         if (confirm("Apakah Anda yakin ingin menghapus surat ini?")) {
@@ -223,34 +253,36 @@ body {
         }
     }
 
-    function editSurat(index) {
-        let surat = suratData[index];
-        document.getElementById('editIndex').value = index;
-        document.getElementById('tanggal').value = surat.tanggal;
-        document.getElementById('judul').value = surat.judul;
-        document.getElementById('kategori').value = surat.kategori;
-        let modal = new bootstrap.Modal(document.getElementById('modalSurat'));
-        modal.show();
-    }
+    document.getElementById('formSurat').addEventListener('submit', function(event) {
+event.preventDefault();
+let index = document.getElementById('editIndex').value;
+let noSurat = document.getElementById('noSurat').value;
+let kodeSurat = document.getElementById('kodeSurat').value;
+let waktuMasuk = document.getElementById('waktuKeluar').value;
+let nomorSurat = document.getElementById('nomorSurat').value;
+let tanggalSurat = document.getElementById('tanggalsurat').value;
+let perihal = document.getElementById('perihal').value;
+let pengirim = document.getElementById('pengirim').value;
+let kepada = document.getElementById('kepada').value;
+let fileInput = document.getElementById('lampiran');
+let file = fileInput.files[0];
 
-    function filterSurat() {
-        let kategori = document.getElementById('filterKategori').value;
-        let filteredData = suratData.filter(surat => !kategori || surat.kategori === kategori);
-        renderTable(filteredData);
-    }
+let fileURL = file ? URL.createObjectURL(file) : (index !== "" ? suratData[indexNum]?.fileURL : "");
+let newSurat = { noSurat, kodeSurat, waktuKeluar, nomorSurat, tanggalSurat, perihal, pengirim, kepada, fileURL };
 
-    function sortSurat() {
-        let order = document.getElementById('sortSurat').value;
-        suratData.sort((a, b) => order === "asc" ? a.tanggal.localeCompare(b.tanggal) : b.tanggal.localeCompare(a.tanggal));
-        renderTable();
-    }
+if (index) {
+    suratData[index] = newSurat;
+} else {
+    suratData.push(newSurat);
+}
 
-    function resetForm() {
-        document.getElementById('editIndex').value = "";
-        document.getElementById('formSurat').reset();
-    }
+renderTable();
+document.getElementById('formSurat').reset();
+let modal = bootstrap.Modal.getInstance(document.getElementById('modalSurat'));
+modal.hide();
+});
+
 </script>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
