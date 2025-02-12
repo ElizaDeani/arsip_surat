@@ -270,7 +270,7 @@ body {
     let fileInput = document.getElementById('lampiran');
     let file = fileInput.files[0];
 
-    let fileURL = file ? URL.createObjectURL(file) : suratData[index]?.fileURL || "";
+    let fileURL = file ? URL.createObjectURL(file) : (index !== "" ? suratData[indexNum]?.fileURL : "");
     let newSurat = { noSurat, kodeSurat, waktuMasuk, nomorSurat, tanggalSurat, perihal, pengirim, kepada, fileURL };
 
     if (index) {
