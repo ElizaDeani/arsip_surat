@@ -14,7 +14,7 @@ import (
 )
 
 type UserService interface {
-	Login(ctx context.Context, username string, password string) (*entity.JWTCustomClaims, error)
+	Login(ctx context.Context, username string, password string, role string) (*entity.JWTCustomClaims, error)
 	GetAll(ctx context.Context) ([]entity.User, error)
 	Register(ctx context.Context, req dto.UserRegisterRequest) error
 	GetById(ctx context.Context, id int) (*entity.User, error)
@@ -35,7 +35,7 @@ func NewUserService(
 	return &userService{cfg, userRepository}
 }
 
-func (s *userService) Login(ctx context.Context, username string, password string) (*entity.JWTCustomClaims, error) {
+func (s *userService) Login(ctx context.Context, username string, password string, role string) (*entity.JWTCustomClaims, error) {
 	user, err := s.userRepository.GetByUsername(ctx, username)
 	if err != nil {
 		return nil, errors.New("username atau password salah")

@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "configurations": [
         {
             "name": "Attach to Edge",
@@ -58,4 +59,11 @@
             ]
         }
     ]
+=======
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": []
+>>>>>>> 6fbc37d44fe3441e185a1eec8b36e91bdfc7d4e5
 }
