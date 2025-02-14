@@ -18,6 +18,9 @@
           <span>Nama Pengguna</span>
           <i></i>
         </div>
+
+  
+
         <div class="input-box">
           <input type="password" name="password" required="required" />
           <span>Kata Sandi</span>
@@ -32,22 +35,26 @@
           <a href="#">Lupa Kata Sandi?</a>
           <a href="#">DAFTAR</a>
         </div>
-        <input type="submit" value="MASUK" class="btn" />
+
+
+
+
+          <input type="submit" value="MASUK" class="btn" />
       </form>
     </div>
     <script>
       document.querySelector("form").addEventListener("submit", async function (event) {
         event.preventDefault(); // Mencegah reload halaman
     
-        const usernameInput = document.querySelector('input[name="username"]');
-        const passwordInput = document.querySelector('input[name="password"]');
-        const roleInput = document.querySelector('input[name="role"]');
+        const usernameInput = document.querySelector('input[name="Refin"]');
+        const passwordInput = document.querySelector('input[name="12345"]');
+        const roleInput = document.querySelector('input[name="Admin"]');
+        {
+                // Jika login berhasil, arahkan ke dashboard
+                window.location.href = 'index.html'; // Ganti dengan URL dashboard Anda
+            }
     
-        // 🔥 Cek apakah elemen ditemukan sebelum lanjut
-        if (!usernameInput || !passwordInput || !roleInput) {
-          alert("Terjadi kesalahan: Input username atau password tidak ditemukan!");
-          return;
-        }
+        
     
         const username = usernameInput.value;
         const password = passwordInput.value;
