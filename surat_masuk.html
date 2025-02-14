@@ -212,22 +212,21 @@ body {
     }
 }
      document.addEventListener("DOMContentLoaded", function () {
-            let inputWaktu = document.getElementById("waktuMasuk");
+    let inputWaktu = document.getElementById("waktuMasuk");
 
-            // Set nilai default ke waktu sekarang dalam format yang benar
-            let now = new Date();
-            let formattedNow = now.toISOString().slice(0, 16); // yyyy-MM-ddTHH:mm
-            inputWaktu.value = formattedNow;
+    function getFormattedTime() {
+        let now = new Date();
+        let hours = now.getHours().toString().padStart(2, "0");
+        let minutes = now.getMinutes().toString().padStart(2, "0");
+        return `${hours}:${minutes}`; // Format HH:MM
+    }
 
-            // Pastikan input tetap sesuai format saat pengguna mengetik
-            inputWaktu.addEventListener("blur", function () {
-                let value = inputWaktu.value;
-                if (!value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)) {
-                    alert("Format tanggal dan waktu harus: YYYY-MM-DDTHH:MM");
-                    inputWaktu.value = formattedNow; // Kembalikan ke nilai default jika salah
-                }
-            });
-        });
+    // Tunggu sebentar sebelum mengatur nilai input (workaround untuk beberapa browser)
+    setTimeout(() => {
+        inputWaktu.value = getFormattedTime();
+    }, 100);
+});
+
     let suratData = [];
 
         function renderTable() {
