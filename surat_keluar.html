@@ -92,14 +92,11 @@ body {
 
     <!-- Filter & Sorting -->
     <div class="row mb-3">
-        <div class="col-md-6">
-            <label>Kategori Surat:</label>
-            <select id="filterKategori" class="form-control" onchange="filterSurat()">
-                <option value="">Semua</option>
-                <option value="Undangan">Undangan</option>
-                <option value="Pemberitahuan">Pemberitahuan</option>
-                <option value="Laporan">Laporan</option>
-            </select>
+        <div class="search-container">
+            <input type="text" id="searchPerihal" placeholder="Cari berdasarkan Perihal">
+            <input type="date" id="searchTanggal">
+            <input type="text" id="searchPengirim" placeholder="Cari berdasarkan Pengirim">
+            <button onclick="filterSurat()">Cari</button>
         </div>
         <div class="col-md-6">
             <label>Urutkan:</label>
@@ -186,6 +183,30 @@ body {
 </div>
 
 <script>
+    function filterSurat() {
+            let inputPerihal = document.getElementById("searchPerihal").value.toLowerCase();
+            let inputTanggal = document.getElementById("searchTanggal").value;
+            let inputPengirim = document.getElementById("searchPengirim").value.toLowerCase();
+            
+            let table = document.querySelector("table tbody");
+            let rows = table.getElementsByTagName("tr");
+
+            for (let i = 0; i < rows.length; i++) {
+                let perihal = rows[i].getElementsByTagName("td")[4].textContent.toLowerCase();
+                let tanggal = rows[i].getElementsByTagName("td")[3].textContent;
+                let pengirim = rows[i].getElementsByTagName("td")[5].textContent.toLowerCase();
+
+                if (
+                    (inputPerihal === "" || perihal.includes(inputPerihal)) &&
+                    (inputTanggal === "" || tanggal === inputTanggal) &&
+                    (inputPengirim === "" || pengirim.includes(inputPengirim))
+                ) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
  document.addEventListener("DOMContentLoaded", function () {
         let inputWaktu = document.getElementById("waktuKeluar");
 
