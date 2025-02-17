@@ -10,6 +10,7 @@ type Config struct {
 	PORT        string      `env:"PORT" envDefault:"8080"`
 	MySQLConfig MySQLConfig `envPrefix:"MYSQL_"`
 	JWTConfig   JWTConfig   `envPrefix:"JWT_" mapstructure:"JWT"`
+	JWTSecret   string      `env:"JWT_SECRET" envDefault:"secret"`
 }
 
 type MySQLConfig struct {

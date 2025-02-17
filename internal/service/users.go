@@ -50,7 +50,7 @@ func (s *userService) Login(ctx context.Context, username string, password strin
 	claims := &entity.JWTCustomClaims{
 		Username: user.Username,
 		Role:     user.Role,
-		IDUser:   user.Id,
+		Id:       int64(user.Id),
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    "archivio",
 			ExpiresAt: jwt.NewNumericDate(expiredTime),

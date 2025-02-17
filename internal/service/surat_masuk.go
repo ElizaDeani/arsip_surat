@@ -14,6 +14,7 @@ type SuratMasukService interface {
 	Create(ctx context.Context, req dto.CreateSuratMasukRequest) error
 	Update(ctx context.Context, req dto.UpdateSuratMasukRequest) error
 	Delete(ctx context.Context, suratMasuk *entity.SuratMasuk) error
+	UpdateLampiran(ctx context.Context, kodeSurat int64, filePath string) error
 }
 
 type suratMasukService struct {
@@ -33,15 +34,17 @@ func (s *suratMasukService) GetByKodeSurat(ctx context.Context, kodeSurat int64)
 }
 
 func (s *suratMasukService) Create(ctx context.Context, req dto.CreateSuratMasukRequest) error {
+
 	// Buat entitas SuratMasuk dari request DTO
 	suratMasuk := &entity.SuratMasuk{
 		KodeSurat:    req.KodeSurat,
-		TanggalMasuk: req.TanggalMasuk,
+		WaktuMasuk:   req.WaktuMasuk, // Menggunakan string
 		NoSurat:      req.NoSurat,
 		TanggalSurat: req.TanggalSurat,
 		Pengirim:     req.Pengirim,
 		Kepada:       req.Kepada,
 		Perihal:      req.Perihal,
+		Lampiran:     req.Lampiran,
 	}
 	// Simpan ke repository
 	if err := s.suratMasukRepository.Create(ctx, suratMasuk); err != nil {
@@ -50,25 +53,37 @@ func (s *suratMasukService) Create(ctx context.Context, req dto.CreateSuratMasuk
 	return nil
 }
 
-// Update implements TicketService.
 func (s *suratMasukService) Update(ctx context.Context, req dto.UpdateSuratMasukRequest) error {
 	suratMasuk, err := s.suratMasukRepository.GetByKodeSurat(ctx, req.KodeSurat)
 	if err != nil {
 		return err
 	}
+
+	// Memperbarui data SuratMasuk
 	suratMasuk.KodeSurat = req.KodeSurat
-	suratMasuk.TanggalMasuk = req.TanggalMasuk
+	suratMasuk.WaktuMasuk = req.WaktuMasuk // Menggunakan string
 	suratMasuk.NoSurat = req.NoSurat
 	suratMasuk.TanggalSurat = req.TanggalSurat
 	suratMasuk.Pengirim = req.Pengirim
 	suratMasuk.Kepada = req.Kepada
 	suratMasuk.Perihal = req.Perihal
+	suratMasuk.Lampiran = req.Lampiran
 
+	// Update ke repository
 	return s.suratMasukRepository.Update(ctx, suratMasuk)
 }
 
-// Delete implements TicketService.
 func (s *suratMasukService) Delete(ctx context.Context, suratMasuk *entity.SuratMasuk) error {
 	return s.suratMasukRepository.Delete(ctx, suratMasuk)
+}
 
+// UpdateLampiran memperbarui lampiran surat berdasarkan kode_surat
+func (s *suratMasukService) UpdateLampiran(ctx context.Context, kodeSurat int64, filePath string) error {
+	suratMasuk, err := s.suratMasukRepository.GetByKodeSurat(ctx, kodeSurat)
+	if err != nil {
+		return err
+	}
+
+	suratMasuk.Lampiran = filePath
+	return s.suratMasukRepository.UpdateLampiran(ctx, kodeSurat, filePath)
 }

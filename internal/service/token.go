@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/ElizaDeani/archivio/internal/entity"
 	"github.com/golang-jwt/jwt/v5"
@@ -26,5 +27,6 @@ func (s *tokenService) GenerateAccessToken(ctx context.Context, claims entity.JW
 	if err != nil {
 		return "", err
 	}
+	fmt.Println("🟢 Token yang dihasilkan:", encodedToken)
 	return encodedToken, nil
 }

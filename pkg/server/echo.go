@@ -1,7 +1,9 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/ElizaDeani/archivio/config"
 	"github.com/ElizaDeani/archivio/internal/entity"
@@ -36,6 +38,7 @@ func NewServer(cfg *config.Config, publicRoutes, privateRoutes []route.Route) *S
 		}
 	}
 	if len(privateRoutes) > 0 {
+		v1.Use(JWTMiddleware(cfg.JWTSecret))
 		for _, route := range privateRoutes {
 			v1.Add(route.Method, route.Path, route.Handler)
 		}
@@ -46,15 +49,30 @@ func NewServer(cfg *config.Config, publicRoutes, privateRoutes []route.Route) *S
 func JWTMiddleware(secretKey string) echo.MiddlewareFunc {
 	return echojwt.WithConfig(echojwt.Config{
 		NewClaimsFunc: func(c echo.Context) jwt.Claims {
-			return new(entity.JWTCustomClaims)
+			return &entity.JWTCustomClaims{}
 		},
-		SigningKey: []byte(secretKey),
+		SigningKey:    []byte(secretKey),
+		SigningMethod: "HS256",
+		TokenLookup:   "header:Authorization,query:token",
 		ErrorHandler: func(ctx echo.Context, err error) error {
-			return ctx.JSON(http.StatusUnauthorized, response.ErrorResponse(http.StatusUnauthorized, "anda harus login untuk mengakses resource ini"))
+			authHeader := ctx.Request().Header.Get("Authorization")
+
+			// Hapus prefix "Bearer " jika ada
+			tokenString := strings.TrimPrefix(authHeader, "Bearer ")
+
+			// Debugging log
+			fmt.Println("🔴 Token yang diterima:", tokenString)
+			fmt.Println("🔴 Error JWT:", err)
+
+			// Cek jika token kosong atau error parsing
+			if authHeader == "" {
+				return ctx.JSON(http.StatusUnauthorized, response.ErrorResponse(http.StatusUnauthorized, "token tidak ditemukan, silakan login"))
+			}
+
+			return ctx.JSON(http.StatusUnauthorized, response.ErrorResponse(http.StatusUnauthorized, "token tidak valid atau kadaluarsa"))
 		},
 	})
 }
-
 func RBACMiddleware(roles []string) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
