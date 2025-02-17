@@ -6,6 +6,9 @@
     <title>Surat Masuk</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+input[type="text"] {
+    width: 300px; /* Sesuaikan ukuran sesuai kebutuhan */
+}
         /* Styling untuk Navbar */
 .navbar {
     display: flex;
@@ -95,14 +98,11 @@ body {
 
     <!-- Filter & Sorting -->
     <div class="row mb-3">
-        <div class="col-md-6">
-            <label>Kategori Surat:</label>
-            <select id="filterKategori" class="form-control" onchange="filterSurat()">
-                <option value="">Semua</option>
-                <option value="Undangan">Undangan</option>
-                <option value="Pemberitahuan">Pemberitahuan</option>
-                <option value="Laporan">Laporan</option>
-            </select>
+        <div class="search-container">
+            <input type="text" id="searchPerihal" placeholder="Cari berdasarkan Perihal">
+            <input type="date" id="searchTanggal">
+            <input type="text" id="searchPengirim" placeholder="Cari berdasarkan Pengirim">
+            <button onclick="filterSurat()">Cari</button>
         </div>
         <div class="col-md-6">
             <label>Urutkan:</label>
@@ -144,11 +144,6 @@ body {
             <div class="modal-body">
                     <form id="formSurat">
                         <input type="hidden" id="editIndex">
-                        
-                        <div class="mb-3">
-                            <label>No</label>
-                            <input type="number" class="form-control" id="noSurat" required>
-                        </div>
                         <div class="mb-3">
                             <label>Kode Surat</label>
                             <input type="text" class="form-control" id="kodeSurat" required>
@@ -188,24 +183,46 @@ body {
         </div>
     </div>
 
-<script>
+<script>function filterSurat() {
+    let inputPerihal = document.getElementById("searchPerihal").value.toLowerCase();
+    let inputTanggal = document.getElementById("searchTanggal").value;
+    let inputPengirim = document.getElementById("searchPengirim").value.toLowerCase();
+    
+    let table = document.querySelector("table tbody");
+    let rows = table.getElementsByTagName("tr");
+
+    for (let i = 0; i < rows.length; i++) {
+        let perihal = rows[i].getElementsByTagName("td")[4].textContent.toLowerCase();
+        let tanggal = rows[i].getElementsByTagName("td")[3].textContent;
+        let pengirim = rows[i].getElementsByTagName("td")[5].textContent.toLowerCase();
+
+        if (
+            (inputPerihal === "" || perihal.includes(inputPerihal)) &&
+            (inputTanggal === "" || tanggal === inputTanggal) &&
+            (inputPengirim === "" || pengirim.includes(inputPengirim))
+        ) {
+            rows[i].style.display = "";
+        } else {
+            rows[i].style.display = "none";
+        }
+    }
+}
      document.addEventListener("DOMContentLoaded", function () {
-            let inputWaktu = document.getElementById("waktuMasuk");
+    let inputWaktu = document.getElementById("waktuMasuk");
 
-            // Set nilai default ke waktu sekarang dalam format yang benar
-            let now = new Date();
-            let formattedNow = now.toISOString().slice(0, 16); // yyyy-MM-ddTHH:mm
-            inputWaktu.value = formattedNow;
+    function getFormattedTime() {
+        let now = new Date();
+        let hours = now.getHours().toString().padStart(2, "0");
+        let minutes = now.getMinutes().toString().padStart(2, "0");
+        return `${hours}:${minutes}`; // Format HH:MM
+    }
 
-            // Pastikan input tetap sesuai format saat pengguna mengetik
-            inputWaktu.addEventListener("blur", function () {
-                let value = inputWaktu.value;
-                if (!value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)) {
-                    alert("Format tanggal dan waktu harus: YYYY-MM-DDTHH:MM");
-                    inputWaktu.value = formattedNow; // Kembalikan ke nilai default jika salah
-                }
-            });
-        });
+    // Tunggu sebentar sebelum mengatur nilai input (workaround untuk beberapa browser)
+    setTimeout(() => {
+        inputWaktu.value = getFormattedTime();
+    }, 100);
+});
+
     let suratData = [];
 
         function renderTable() {
@@ -236,7 +253,6 @@ body {
             let surat = suratData[index];
 
             document.getElementById('editIndex').value = index;
-            document.getElementById('noSurat').value = surat.noSurat;
             document.getElementById('kodeSurat').value = surat.kodeSurat;
             document.getElementById('waktuMasuk').value = surat.waktuMasuk;
             document.getElementById('nomorSurat').value = surat.nomorSurat;
@@ -255,11 +271,14 @@ body {
                 renderTable();
             }
         }
-
+        function reorderSuratNumbers() {
+    suratData.forEach((surat, index) => {
+        surat.noSurat = index + 1;
+    });
+}
         document.getElementById('formSurat').addEventListener('submit', function(event) {
     event.preventDefault();
     let index = document.getElementById('editIndex').value;
-    let noSurat = document.getElementById('noSurat').value;
     let kodeSurat = document.getElementById('kodeSurat').value;
     let waktuMasuk = document.getElementById('waktuMasuk').value;
     let nomorSurat = document.getElementById('nomorSurat').value;
@@ -270,8 +289,11 @@ body {
     let fileInput = document.getElementById('lampiran');
     let file = fileInput.files[0];
 
-    let fileURL = file ? URL.createObjectURL(file) : suratData[index]?.fileURL || "";
-    let newSurat = { noSurat, kodeSurat, waktuMasuk, nomorSurat, tanggalSurat, perihal, pengirim, kepada, fileURL };
+    let fileURL = file ? URL.createObjectURL(file) : (index !== "" ? suratData[indexNum]?.fileURL : "");
+    let newSurat = { 
+        noSurat: index ? suratData[index].noSurat : suratData.length + 1, 
+        kodeSurat, waktuMasuk, nomorSurat, tanggalSurat, perihal, pengirim, kepada, fileURL 
+    };
 
     if (index) {
         suratData[index] = newSurat;
