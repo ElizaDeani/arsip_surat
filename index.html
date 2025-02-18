@@ -23,6 +23,8 @@
             color: white;
             display: block;
             padding: 10px;
+            top : 0;
+            bottom : 0;
             text-decoration: none;
         }
         .sidebar a:hover {
@@ -63,6 +65,45 @@
             width: 50%;
         }
     </style>
+    <div class="card mt-3">
+    </div>
+    
+    <script>
+        // Mengecek tema yang tersimpan di Local Storage saat halaman dimuat
+        function loadTheme() {
+            const savedTheme = localStorage.getItem("theme");
+            if (savedTheme === "dark") {
+                document.body.classList.add("dark-mode");
+            }
+        }
+    
+        // Panggil fungsi saat halaman dimuat
+        loadTheme();
+    </script>
+    
+    
+    <style>
+        /* Tema Gelap */
+        .dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+    
+        .dark-mode .navbar {
+            background-color: #1c1c1c;
+        }
+    
+        .dark-mode .menu li a {
+            color: white;
+        }
+    
+        .dark-mode .card {
+            background-color: #1e1e1e;
+            color: white;
+        }
+    </style>
+    
+    
 </head>
 <body>
     <div class="sidebar">

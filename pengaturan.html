@@ -86,71 +86,151 @@ body {
     <div class="container mt-5">
         
         
-        <div class="container mt-5">
-        
-        
-            <div class="card mt-3">
-                <div class="card-header">Tema</div>
-                <div class="card-body">
-                    <button class="btn btn-dark" onclick="setDarkMode()">Tema Gelap</button>
-                    <button class="btn btn-light" onclick="setLightMode()">Tema Terang</button>
-                </div>
-            </div>
-            
-            <script>
-                // Fungsi untuk mengubah ke tema gelap
-                function setDarkMode() {
-                    document.body.classList.add("dark-mode");
-                    localStorage.setItem("theme", "dark"); // Simpan preferensi tema
-                }
-            
-                // Fungsi untuk mengubah ke tema terang
-                function setLightMode() {
-                    document.body.classList.remove("dark-mode");
-                    localStorage.setItem("theme", "light"); // Simpan preferensi tema
-                }
-            
-                // Mengecek tema yang tersimpan di Local Storage saat halaman dimuat
-                function loadTheme() {
-                    const savedTheme = localStorage.getItem("theme");
-                    if (savedTheme === "dark") {
-                        document.body.classList.add("dark-mode");
-                    }
-                }
-            
-                // Panggil fungsi saat halaman dimuat
-                loadTheme();
-            </script>
-            
-            <style>
-                /* Tema Gelap */
-                .dark-mode {
-                    background-color: #121212;
-                    color: white;
-                }
-            
-                .dark-mode .navbar {
-                    background-color: #1c1c1c;
-                }
-            
-                .dark-mode .menu li a {
-                    color: white;
-                }
-            
-                .dark-mode .card {
-                    background-color: #1e1e1e;
-                    color: white;
-                }
-            </style>
-            
-    
         <div class="card mt-3">
-            <div class="card-header">Manajemen Pengguna</div>
+            <div class="card-header">Tema</div>
             <div class="card-body">
-                <button class="btn btn-primary">Tambah Pengguna</button>
-                <button class="btn btn-danger">Hapus Pengguna</button>
+                <button class="btn btn-dark" onclick="setDarkMode()">Tema Gelap</button>
+                <button class="btn btn-light" onclick="setLightMode()">Tema Terang</button>
             </div>
         </div>
+        
+        <script>
+            // Fungsi untuk mengubah ke tema gelap
+            function setDarkMode() {
+                document.body.classList.add("dark-mode");
+                localStorage.setItem("theme", "dark"); // Simpan preferensi tema
+            }
+        
+            // Fungsi untuk mengubah ke tema terang
+            function setLightMode() {
+                document.body.classList.remove("dark-mode");
+                localStorage.setItem("theme", "light"); // Simpan preferensi tema
+            }
+        
+            // Mengecek tema yang tersimpan di Local Storage saat halaman dimuat
+            function loadTheme() {
+                const savedTheme = localStorage.getItem("theme");
+                if (savedTheme === "dark") {
+                    document.body.classList.add("dark-mode");
+                }
+            }
+        
+            // Panggil fungsi saat halaman dimuat
+            loadTheme();
+        </script>
+        
+        <style>
+            /* Tema Gelap */
+            .dark-mode {
+                background-color: #121212;
+                color: white;
+            }
+        
+            .dark-mode .navbar {
+                background-color: #1c1c1c;
+            }
+        
+            .dark-mode .menu li a {
+                color: white;
+            }
+        
+            .dark-mode .card {
+                background-color: #1e1e1e;
+                color: white;
+            }
+        </style>
+        
+        
+
+<div class="card mt-3">
+    <div class="card-header">Manajemen Pengguna</div>
+    <div class="card-body">
+        <input type="text" id="username" class="form-control mb-2" placeholder="Nama Pengguna">
+        <input type="password" id="password" class="form-control mb-2" placeholder="Kata Sandi">
+        <select id="role" class="form-control mb-2">
+            <option value="User">User</option>
+            <option value="Admin">Admin</option>
+        </select>
+        <button class="btn btn-primary" onclick="tambahPengguna()">Tambah Pengguna</button>
     </div>
+</div>
+
+<!-- Tabel untuk menampilkan daftar pengguna -->
+<div class="card mt-3">
+    <div class="card-header">Daftar Pengguna</div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama Pengguna</th>
+                    <th>Peran</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="userTable">
+                <!-- Data pengguna akan muncul di sini -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Ambil data pengguna dari Local Storage
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    // Fungsi untuk menampilkan daftar pengguna di tabel
+    function tampilkanPengguna() {
+        let userTable = document.getElementById("userTable");
+        userTable.innerHTML = ""; // Kosongkan tabel sebelum diisi ulang
+
+        users.forEach((user, index) => {
+            let row = `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${user.username}</td>
+                    <td>${user.role}</td>
+                    <td><button class="btn btn-sm btn-danger" onclick="hapusPengguna(${index})">Hapus</button></td>
+                </tr>
+            `;
+            userTable.innerHTML += row;
+        });
+
+        // Simpan data ke Local Storage
+        localStorage.setItem("users", JSON.stringify(users));
+    }
+
+    // Fungsi untuk menambahkan pengguna
+    function tambahPengguna() {
+        let username = document.getElementById("username").value.trim();
+        let password = document.getElementById("password").value.trim();
+        let role = document.getElementById("role").value;
+
+        if (username === "" || password === "") {
+            alert("Nama pengguna dan kata sandi harus diisi!");
+            return;
+        }
+
+        // Tambahkan pengguna ke array
+        users.push({ username, password, role });
+        tampilkanPengguna();
+
+        // Kosongkan input setelah menambah pengguna
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
+        document.getElementById("role").value = "User";
+    }
+
+    // Fungsi untuk menghapus pengguna berdasarkan indeks
+    function hapusPengguna(index) {
+        if (confirm("Apakah Anda yakin ingin menghapus pengguna ini?")) {
+            users.splice(index, 1);
+            tampilkanPengguna();
+        }
+    }
+
+    // Tampilkan pengguna saat halaman dimuat
+    tampilkanPengguna();
+</script>    
 </body>
 </html>
