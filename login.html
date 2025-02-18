@@ -1,65 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Archivio</title>
+    <title>Archivio Masuk</title>
     <link rel="stylesheet" href="style.css" />
-</head>
-<body>
+  </head>
+  <body>
     <div class="box">
-        <div class="border-line"></div>
-        <form id="loginForm">
-            <center><img src="logoo.png" alt="Archivio" width="200" /></center>
-            <h2>Silahkan Masuk</h2>
-
-<div class="input-box">
-  <input type="text" id="username" name="username" required="required" />
-  <span>Nama Pengguna</span>
-  <i></i>
-</div>
-
-<div class="input-box">
-  <input type="password" id="password" name="password" required="required" />
-  <span>Kata Sandi</span>
-  <i></i>
-</div>
-
-<div class="input-box">
-  <input type="text" id="role" name="role" required="required" />
-  <span>Status</span>
-  <i></i>
-</div>
-<div class="imp-links">
-  <a href="#">Lupa Kata Sandi?</a>
-  <a href="daftar.html">DAFTAR</a>
-</div>
-
-<input type="submit" value="MASUK" class="btn" />
-</form>
-</div>
-<script>
-document.getElementById("loginForm").addEventListener("submit", function (event) {
-event.preventDefault(); // Mencegah reload halaman
-
-const usernameInput = document.getElementById("username");
-const passwordInput = document.getElementById("password");
-const roleInput = document.getElementById("role");
-
-const username = usernameInput.value;
-const password = passwordInput.value;
-const role = roleInput.value;
-
-// Validasi manual
-const validUsername = "Refin"; // Ganti dengan username yang valid
-const validPassword = "12345"; // Ganti dengan password yang valid
-const validRole = "admin"; // Ganti dengan role yang valid
-
-if (username === validUsername && password === validPassword && role === validRole) {
-  alert("Login berhasil!");
-  window.location.href = "index.html"; // Redirect ke dashboard
-} else {
-  alert("Login gagal: Username, password, atau role tidak sesuai.");
-}
-});
-</script>
+      <div class="border-line"></div>
+      <form action="index.html">
+       <center><img src="logoo.png" alt="Archivio" width="200";/></center>
+        <h2>Silahkan Masuk</h2>
+        
+        <div class="input-box">
+          <input type="text" name="username" required="required" />
+          <span>Nama Pengguna</span>
+          <i></i>
+        </div>
+        <div class="input-box">
+          <input type="password" name="password" required="required" />
+          <span>Kata Sandi</span>
+          <i></i>
+        </div>
+        <div class="input-box">
+          <input type="text" name="role" required="required" />
+          <span>Status</span>
+          <i></i>
+        </div>
+        <div class="imp-links">
+          <a href="#">Lupa Kata Sandi?</a>
+          <a href="daftar.html">DAFTAR</a>
+        </div>
+        <input type="submit" value="MASUK" class="btn" />
+      </form>
+    </div>
+    <script>
+      document.querySelector("form").addEventListener("submit", async function (event) {
+        event.preventDefault(); // Mencegah reload halaman
+    
+        const usernameInput = document.querySelector('input[name="username"]');
+        const passwordInput = document.querySelector('input[name="password"]');
+        const roleInput = document.querySelector('input[name="role"]');
+    
+        // 🔥 Cek apakah elemen ditemukan sebelum lanjut
+        if (!usernameInput || !passwordInput || !roleInput) {
+          alert("Terjadi kesalahan: Input username atau password tidak ditemukan!");
+          return;
+        }
+    
+        const username = usernameInput.value;
+        const password = passwordInput.value;
+        const role = roleInput.value;
+    
+        const response = await fetch("http://localhost:8080/api/v1/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password, role }),
+        });
+    
+        const result = await response.json();
+    
+        if (response.ok) {
+          alert("Login berhasil!");
+          localStorage.setItem("token", result.data.token); // Simpan token JWT
+          window.location.href = "index.html"; // Redirect ke dashboard
+        } else {
+         alert("Login gagal: " + (result.message || "Terjadi kesalahan"));
+          }
+ 
+        }
+      );
+    </script>
+    
+    
+  </body>
+</html>
