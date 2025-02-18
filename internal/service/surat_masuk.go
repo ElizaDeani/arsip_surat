@@ -38,7 +38,11 @@ func (s *suratMasukService) Create(ctx context.Context, req dto.CreateSuratMasuk
 	// Buat entitas SuratMasuk dari request DTO
 	suratMasuk := &entity.SuratMasuk{
 		KodeSurat:    req.KodeSurat,
+<<<<<<< HEAD
 		WaktuMasuk:   req.WaktuMasuk, // Menggunakan string
+=======
+		WaktuMasuk:   req.WaktuMasuk,
+>>>>>>> 23c771c (update)
 		NoSurat:      req.NoSurat,
 		TanggalSurat: req.TanggalSurat,
 		Pengirim:     req.Pengirim,
@@ -61,7 +65,11 @@ func (s *suratMasukService) Update(ctx context.Context, req dto.UpdateSuratMasuk
 
 	// Memperbarui data SuratMasuk
 	suratMasuk.KodeSurat = req.KodeSurat
+<<<<<<< HEAD
 	suratMasuk.WaktuMasuk = req.WaktuMasuk // Menggunakan string
+=======
+	suratMasuk.WaktuMasuk = req.WaktuMasuk
+>>>>>>> 23c771c (update)
 	suratMasuk.NoSurat = req.NoSurat
 	suratMasuk.TanggalSurat = req.TanggalSurat
 	suratMasuk.Pengirim = req.Pengirim
