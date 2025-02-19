@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS surat_masuk (
     waktu_masuk DATE NOT NULL,
     no_surat VARCHAR(255) NOT NULL,
     tanggal_surat DATE NULL,
-    perihal VARCHAR(255) NOT NULL,
     pengirim VARCHAR(255) NOT NULL,
     kepada VARCHAR(255) NOT NULL,
     perihal VARCHAR(255) NOT NULL,
