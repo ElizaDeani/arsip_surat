@@ -17,6 +17,8 @@
             background: #222;
             color: white;
             position: fixed;
+            top : 0;
+            bottom :0 ;
             padding-top: 20px;
         }
         .sidebar a {
@@ -56,6 +58,7 @@
         .content {
             margin-left: 250px;
             padding: 20px;
+            margin-top: 50px;
         }
         .chart-container {
             width: 50%;
@@ -164,9 +167,38 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5>Semua Surat</h5>
                         <div>
-                            <button class="btn btn-primary"><i class="fas fa-print"></i> Print</button>
-                            <button class="btn btn-secondary"><i class="fas fa-share"></i> Share</button>
+                            <button class="btn btn-primary" id="printButton"><i class="fas fa-print"></i> Print</button>
+                            <button class="btn btn-secondary" id="shareButton"><i class="fas fa-share"></i> Share</button>
                         </div>
+                        
+                        <script>
+                            // Fungsi untuk mencetak halaman
+                            function printPage() {
+                                window.print();
+                            }
+                        
+                            // Fungsi untuk membagikan halaman (contoh sederhana)
+                            function sharePage() {
+                                if (navigator.share) {
+                                    navigator.share({
+                                        title: document.title,
+                                        url: window.location.href
+                                    }).then(() => {
+                                        console.log('Page shared successfully');
+                                    }).catch((error) => {
+                                        console.error('Error sharing:', error);
+                                    });
+                                } else {
+                                    alert('Sharing not supported on this browser.');
+                                }
+                            }
+                        
+                            // Menambahkan event listener untuk tombol Print
+                            document.getElementById('printButton').addEventListener('click', printPage);
+                        
+                            // Menambahkan event listener untuk tombol Share
+                            document.getElementById('shareButton').addEventListener('click', sharePage);
+                        </script>
                     </div>
                     <div class="card-body">
                         <table class="table table-bordered">
@@ -183,13 +215,13 @@
                                     <td>A/24/jabsjsg</td>
                                     <td>Today</td>
                                     <td>Surat undangan</td>
-                                    <td><a href="#">Surat Masuk</a></td>
+                                    <td>Surat Masuk</a></td>
                                 </tr>
                                 <tr>
                                     <td>B/0283/ksshdj</td>
                                     <td>Today</td>
                                     <td>Surat undangan</td>
-                                    <td><a href="#">Surat Keluar</a></td>
+                                    <td>Surat Keluar</a></td>
                                 </tr>
                             </tbody>
                         </table>
