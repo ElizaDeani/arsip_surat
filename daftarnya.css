@@ -117,7 +117,7 @@ body{
     border: none;
     outline: none;
     box-shadow: none;
-    color: #23242a;
+    color: #ffffff;
     font-size: 16px;
     letter-spacing: 1px;
     transition: 0.5s;
@@ -161,10 +161,11 @@ body{
     justify-content: space-between;
 }
 .imp-links a{
-    color: #ececec;
+    color: #ffffff;
     font-size: 14px;
     text-decoration: none;
-    margin: 15px 0;
+    margin-bottom: 20px;
+    
 }
 .imp-links a:hover{
     color: #fff;
