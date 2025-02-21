@@ -32,31 +32,7 @@ func PublicRoutes(
 			Path:    "/users",
 			Handler: userHandler.CreateUser,
 		},
-		{
-			Method:  http.MethodGet,
-			Path:    "/suratMasuk",
-			Handler: suratMasukHandler.GetSuratMasuk,
-		},
-		{
-			Method:  http.MethodGet,
-			Path:    "/suratMasuk/:kode_surat",
-			Handler: suratMasukHandler.GetSuratMasukByKodeSurat,
-		},
-		{
-			Method:  http.MethodPost,
-			Path:    "/suratMasuk",
-			Handler: suratMasukHandler.CreateSuratMasuk,
-		},
-		{
-			Method:  http.MethodPut,
-			Path:    "/suratMasuk/:kode_surat",
-			Handler: suratMasukHandler.UpdateSuratMasuk,
-		},
-		{
-			Method:  http.MethodDelete,
-			Path:    "/suratMasuk/:kode_surat",
-			Handler: suratMasukHandler.DeleteSuratMasuk,
-		},
+
 		{
 			Method:  http.MethodGet,
 			Path:    "/suratKeluar",
@@ -81,6 +57,11 @@ func PublicRoutes(
 			Method:  http.MethodDelete,
 			Path:    "/suratKeluar/:kode_surat",
 			Handler: suratKeluarHandler.DeleteSuratKeluar,
+		},
+		{
+			Method:  http.MethodPost,
+			Path:    "/suratMasuk",
+			Handler: suratMasukHandler.CreateSuratMasuk,
 		},
 	}
 }
@@ -117,9 +98,28 @@ func PrivateRoutes(
 			Roles:   allRoles,
 		},
 		{
+			Method:  http.MethodGet,
+			Path:    "/suratMasuk",
+			Handler: suratMasukHandler.GetSuratMasuk,
+			Roles:   allRoles,
+		},
+		{
+			Method:  http.MethodGet,
+			Path:    "/suratMasuk/:kode_surat",
+			Handler: suratMasukHandler.GetSuratMasukByKodeSurat,
+			Roles:   allRoles,
+		},
+
+		{
 			Method:  http.MethodPut,
-			Path:    "/users/:id",
-			Handler: userHandler.UpdateUser,
+			Path:    "/suratMasuk/:kode_surat",
+			Handler: suratMasukHandler.UpdateSuratMasuk,
+			Roles:   allRoles,
+		},
+		{
+			Method:  http.MethodDelete,
+			Path:    "/suratMasuk/:kode_surat",
+			Handler: suratMasukHandler.DeleteSuratMasuk,
 			Roles:   allRoles,
 		},
 	}

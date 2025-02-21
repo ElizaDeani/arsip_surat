@@ -13,6 +13,7 @@ type SuratMasukRepository interface {
 	Create(ctx context.Context, suratMasuk *entity.SuratMasuk) error
 	Update(ctx context.Context, suratMasuk *entity.SuratMasuk) error
 	Delete(ctx context.Context, suratMasuk *entity.SuratMasuk) error
+	UpdateLampiran(ctx context.Context, kodeSurat int64, filePath string) error
 }
 
 type suratMasukRepository struct {
@@ -27,7 +28,7 @@ func (r *suratMasukRepository) GetAll(ctx context.Context) ([]entity.SuratMasuk,
 	result := make([]entity.SuratMasuk, 0)
 
 	if err := r.db.WithContext(ctx).Find(&result).Error; err != nil {
-		return nil, nil
+		return nil, err
 	}
 	return result, nil
 }
@@ -51,4 +52,11 @@ func (r *suratMasukRepository) Update(ctx context.Context, suratMasuk *entity.Su
 
 func (r *suratMasukRepository) Delete(ctx context.Context, suratMasuk *entity.SuratMasuk) error {
 	return r.db.WithContext(ctx).Delete(suratMasuk).Error
+}
+
+// UpdateLampiran hanya memperbarui kolom lampiran di database
+func (r *suratMasukRepository) UpdateLampiran(ctx context.Context, kodeSurat int64, filePath string) error {
+	return r.db.WithContext(ctx).Model(&entity.SuratMasuk{}).
+		Where("kode_surat = ?", kodeSurat).
+		Update("lampiran", filePath).Error
 }

@@ -67,48 +67,45 @@ body {
     padding-top: 70px; /* Sesuaikan dengan tinggi navbar */
 }
 </style>
-    <script defer>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.getElementById("editProfileBtn").addEventListener("click", function() {
-                document.getElementById("editProfileForm").style.display = "block";
-            });
 
-            document.getElementById("saveProfileBtn").addEventListener("click", function() {
-                let newName = document.getElementById("newName").value;
-                let newEmail = document.getElementById("newEmail").value;
-                
-                if (newName.trim() !== "") {
-                    document.getElementById("displayName").textContent = newName;
-                }
-                if (newEmail.trim() !== "") {
-                    document.getElementById("displayEmail").textContent = newEmail;
-                }
-                alert("Profil berhasil diperbarui.");
-                document.getElementById("editProfileForm").style.display = "none";
-            });
-
-            document.getElementById("savePasswordBtn").addEventListener("click", function() {
-                let oldPass = document.getElementById("oldPassword").value;
-                let newPass = document.getElementById("newPassword").value;
-                let confirmPass = document.getElementById("confirmPassword").value;
-                
-                if (!oldPass || !newPass || !confirmPass) {
-                    alert("Semua kolom password harus diisi!");
-                    return;
-                }
-                
-                if (newPass !== confirmPass) {
-                    alert("Konfirmasi password tidak cocok!");
-                    return;
-                }
-                
-                alert("Password berhasil diperbarui.");
-                document.getElementById("oldPassword").value = "";
-                document.getElementById("newPassword").value = "";
-                document.getElementById("confirmPassword").value = "";
-            });
-        });
+    <div class="card mt-3">
+    </div>
+    
+    <script>
+        // Mengecek tema yang tersimpan di Local Storage saat halaman dimuat
+        function loadTheme() {
+            const savedTheme = localStorage.getItem("theme");
+            if (savedTheme === "dark") {
+                document.body.classList.add("dark-mode");
+            }
+        }
+    
+        // Panggil fungsi saat halaman dimuat
+        loadTheme();
     </script>
+    
+    
+    <style>
+        /* Tema Gelap */
+        .dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+    
+        .dark-mode .navbar {
+            background-color: #1c1c1c;
+        }
+    
+        .dark-mode .menu li a {
+            color: white;
+        }
+    
+        .dark-mode .card {
+            background-color: #1e1e1e;
+            color: white;
+        }
+    </style>
+    
 </head>
 <body>
     <nav class="navbar">
@@ -125,45 +122,191 @@ body {
             <li><a href="login.html">Log Out</a></li>
         </ul>
     </nav>
-    <div class="container mt-5">
-        
-        
-        <div class="card mt-3">
-            <div class="card-header">Informasi Profil</div>
-            <div class="card-body">
-                <p><strong>Nama Pengguna:</strong> <span id="displayName">Olivia Wilson</span></p>
-                <p><strong>Kata Sandi:</strong> <span id="displayEmail">12345</span></p>
-                <p><strong>Status:</strong> <span id="displayEmail">Admin</span></p>
-                <button class="btn btn-primary" id="editProfileBtn">Edit Profil</button>
-                
-                <div id="editProfileForm" class="mt-3" style="display: none;">
-                    <input type="text" class="form-control mb-2" id="newName" placeholder="Nama Baru">
-                    <input type="email" class="form-control mb-2" id="newEmail" placeholder="Email Baru">
-                    <button class="btn btn-success" id="saveProfileBtn">Simpan Perubahan</button>
-                </div>
+    <div class="card mt-3">
+        <div class="card-header">Kelola Profil Saya</div>
+        <div class="card-body">
+            <div class="text-center mb-3">
+                <img id="profilePic" src="default-profile.jpg" alt="Foto Profil" class="rounded-circle" width="150">
+            </div>
+            <p><strong>Nama Pengguna:</strong> <span id="displayName"></span></p>
+            <p><strong>Status:</strong> <span id="displayStatus">Admin</span></p>
+            <p><strong>Kata Sandi:</strong> <span id="displayPassword">******</span> <button class="btn btn-sm btn-secondary" id="togglePassword">Tampilkan</button></p>
+            <p><strong>Alamat:</strong> <span id="displayAddress"></span></p>
+            <p><strong>Nomor Telepon:</strong> <span id="displayPhone"></span></p>
+            <p><strong>Email:</strong> <span id="displayEmail"></span></p>
+            <button class="btn btn-primary" id="editProfileBtn">Edit Profil</button>
+            <div id="editProfileForm" class="mt-3" style="display: none;">
+                <input type="file" class="form-control mb-2" id="newProfilePic">
+                <input type="text" class="form-control mb-2" id="newName" placeholder="Nama Baru">
+                <select class="form-control mb-2" id="newStatus">
+                    <option value="">Pilih Status</option>
+                    <option value="Admin">Admin</option>
+                    <option value="User">User</option>
+                </select>
+                <input type="password" class="form-control mb-2" id="oldPassword" placeholder="Kata Sandi Baru">
+                <input type="text" class="form-control mb-2" id="newAddress" placeholder="Alamat Baru">
+                <input type="text" class="form-control mb-2" id="newPhone" placeholder="Nomor Telepon Baru">
+                <input type="email" class="form-control mb-2" id="newEmail" placeholder="Email Baru">
+                <button class="btn btn-success" id="saveProfileBtn">Simpan Perubahan</button>
             </div>
         </div>
-
-        <div class="card mt-3">
-            <div class="card-header">Ubah Password</div>
-            <div class="card-body">
-                <input type="password" class="form-control mb-2" id="oldPassword" placeholder="Password Lama">
-                <input type="password" class="form-control mb-2" id="newPassword" placeholder="Password Baru">
-                <input type="password" class="form-control mb-2" id="confirmPassword" placeholder="Konfirmasi Password">
-                <button class="btn btn-success" id="savePasswordBtn">Simpan Perubahan</button>
-            </div>
-        </div>
-
+    </div>
+</div>
         <div class="card mt-3">
             <div class="card-header">Log Aktivitas</div>
             <div class="card-body">
-                <ul>
-                    <li>Login terakhir: 2025-02-09</li>
-                    <li>Perubahan profil: 2025-02-08</li>
-                    <li>Reset password: 2025-02-07</li>
+                <ul id="logActivities">
+                    <li>Login terakhir: <span id="lastLoginTime"></span></li>
+                    <li>Perubahan profil: <span id="profileChangeTime"></span></li>
+                    <li>Reset password: <span id="resetPasswordTime"></span></li>
                 </ul>
             </div>
         </div>
     </div>
+    <script>
+        // Menghitung waktu dengan zona waktu WIB (UTC +7)
+        function formatDateToWIB(date) {
+            // Menambahkan 7 jam untuk WIB
+            date.setHours(date.getHours() + 7);
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
+            let seconds = date.getSeconds();
+            let day = date.getDate();
+            let month = date.getMonth() + 1; // JavaScript menghitung bulan mulai dari 0
+            let year = date.getFullYear();
+            // Format waktu menjadi hh:mm:ss dan tanggal dd-mm-yyyy
+            return `${day}-${month < 10 ? '0' + month : month}-${year}`;
+        }
+
+        // Ambil waktu sekarang dan format sesuai WIB
+        let currentDate = new Date();
+        let formattedTime = formatDateToWIB(currentDate);
+        // Set waktu terakhir login dan aktivitas lainnya
+        document.getElementById('lastLoginTime').textContent = formattedTime;
+        document.getElementById('profileChangeTime').textContent = formattedTime;
+        document.getElementById('resetPasswordTime').textContent = formattedTime;
+    </script>
+    <script>
+        // Variabel untuk menyimpan kata sandi
+        let currentPassword = "password123"; 
+
+        // Fungsi untuk menampilkan form edit profil saat tombol Edit Profil diklik
+        document.getElementById("editProfileBtn").addEventListener("click", function() {
+            document.getElementById("editProfileForm").style.display = "block"; // Menampilkan form edit
+        });
+    
+        // Memuat informasi profil dari localStorage jika ada
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedName = localStorage.getItem('name');
+            const savedStatus = localStorage.getItem('status');
+            const savedAddress = localStorage.getItem('address');
+            const savedPhone = localStorage.getItem('phone');
+            const savedEmail = localStorage.getItem('email');
+            const savedProfilePic = localStorage.getItem('profilePic');
+            
+            if (savedName) {
+                document.getElementById('displayName').textContent = savedName;
+            }
+            if (savedStatus) {
+                document.getElementById('displayStatus').textContent = savedStatus;
+            }
+            if (savedAddress) {
+                document.getElementById('displayAddress').textContent = savedAddress;
+            }
+            if (savedPhone) {
+                document.getElementById('displayPhone').textContent = savedPhone;
+            }
+            if (savedEmail) {
+                document.getElementById('displayEmail').textContent = savedEmail;
+            }
+            if (savedProfilePic) {
+                document.getElementById('profilePic').src = savedProfilePic;
+            }
+        });
+
+        // Fungsi untuk menyimpan data profil di localStorage
+        document.getElementById("saveProfileBtn").addEventListener("click", function() {
+            let newName = document.getElementById("newName").value;
+            let newStatus = document.getElementById("newStatus").value;
+            let oldPass = document.getElementById("oldPassword").value;
+            let newPass = document.getElementById("newPassword").value;
+            let confirmPass = document.getElementById("confirmPassword").value;
+            let newAddress = document.getElementById("newAddress").value;
+            let newPhone = document.getElementById("newPhone").value;
+            let newEmail = document.getElementById("newEmail").value;
+            let newProfilePic = document.getElementById("newProfilePic").files[0];
+
+            // Verifikasi kata sandi lama
+            if (oldPass !== currentPassword) {
+                alert("Password lama salah!");
+                return;
+            }
+
+            // Verifikasi konfirmasi kata sandi
+            if (newPass && newPass !== confirmPass) {
+                alert("Konfirmasi password tidak cocok!");
+                return;
+            }
+
+            // Jika nama baru diisi, perbarui nama dan simpan ke localStorage
+            if (newName.trim()) {
+                document.getElementById("displayName").textContent = newName;
+                localStorage.setItem('name', newName);
+            }
+
+            // Perbarui status jika dipilih dan simpan ke localStorage
+            if (newStatus) {
+                document.getElementById("displayStatus").textContent = newStatus;
+                localStorage.setItem('status', newStatus);
+            }
+
+            // Jika kata sandi baru diisi, perbarui kata sandi yang tersimpan
+            if (newPass) {
+                currentPassword = newPass;
+                document.getElementById("displayPassword").textContent = "******"; 
+                alert("Password berhasil diperbarui.");
+            }
+
+            // Perbarui alamat, nomor telepon, dan email jika diisi
+            if (newAddress.trim()) {
+                document.getElementById("displayAddress").textContent = newAddress;
+                localStorage.setItem('address', newAddress);
+            }
+            if (newPhone.trim()) {
+                document.getElementById("displayPhone").textContent = newPhone;
+                localStorage.setItem('phone', newPhone);
+            }
+            if (newEmail.trim()) {
+                document.getElementById("displayEmail").textContent = newEmail;
+                localStorage.setItem('email', newEmail);
+            }
+
+            // Jika foto profil baru dipilih, perbarui foto profil
+            if (newProfilePic) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profilePic').src = e.target.result;
+                    localStorage.setItem('profilePic', e.target.result);
+                }
+                reader.readAsDataURL(newProfilePic);
+            }
+
+            // Sembunyikan form edit setelah menyimpan perubahan
+            document.getElementById("editProfileForm").style.display = "none";
+            alert("Profil berhasil diperbarui.");
+        });
+
+        // Toggle tampilkan/sembunyikan kata sandi
+        document.getElementById("togglePassword").addEventListener("click", function() {
+            let passwordField = document.getElementById("displayPassword");
+            if (passwordField.textContent === "******") {
+                passwordField.textContent = currentPassword;
+                this.textContent = "Sembunyikan";
+            } else {
+                passwordField.textContent = "******";
+                this.textContent = "Tampilkan";
+            }
+        });
+    </script>
 </body>
 </html>
